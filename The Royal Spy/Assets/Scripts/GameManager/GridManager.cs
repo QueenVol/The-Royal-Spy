@@ -8,12 +8,20 @@ public class GridManager : MonoBehaviour
     public int height = 8;
     public float cellSize = 1f;
     public GameObject tilePrefab;
+    public GameObject kingPrefab;
+    public GameObject queenPrefab;
+    public GameObject bishopPrefab;
+    public GameObject knightPrefab;
+    public GameObject rookPrefab;
+    public GameObject pawnPrefab;
+    public GameObject spyPrefab;
 
     private GameObject[,] tiles;
 
     void Start()
     {
         GenerateGrid();
+        PiecesLoc();
     }
 
     void GenerateGrid()
@@ -41,6 +49,32 @@ public class GridManager : MonoBehaviour
 
                 tiles[x, y] = tile;
             }
+        }
+    }
+
+    void PiecesLoc()
+    {
+        SpawnPieces(kingPrefab, 4, 7);
+        SpawnPieces(bishopPrefab, 3, 7);
+        SpawnPieces(knightPrefab, 2, 7);
+        SpawnPieces(knightPrefab, 5, 7);
+        SpawnPieces(spyPrefab, 0, 0);
+    }
+
+    void SpawnPieces(GameObject prefab, int x, int y)
+    {
+        if (tiles[x, y] == null) return;
+
+        Vector3 pos = tiles[x, y].transform.position;
+        GameObject piece = Instantiate(prefab, pos, Quaternion.identity);
+        piece.name = prefab.name + $" ({x},{y})";
+
+        Pieces pieceScript = piece.GetComponent<Pieces>();
+        if (pieceScript != null)
+        {
+            pieceScript.startX = x;
+            pieceScript.startY = y;
+            pieceScript.SnapToTile(tiles[x, y].GetComponent<Tiles>());
         }
     }
 }
