@@ -10,8 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7469481348744370931}
   - component: {fileID: 7785458377782137369}
-  - component: {fileID: 2138802297975327711}
-  - component: {fileID: 2281484020490921878}
+  - component: {fileID: 5329425052834715977}
   m_Layer: 0
   m_Name: Spy
   m_TagString: Untagged
@@ -86,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2138802297975327711
+--- !u!114 &5329425052834715977
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,18 +94,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7158447444519821106}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58c0df709d0b78a4db01e771a3095156, type: 3}
+  m_Script: {fileID: 11500000, guid: bdd482cf12ab55249bed5a379e581465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2281484020490921878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7158447444519821106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8d51df9b15f42b4896a11c5aefbbade, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  health: 10
+  moveRange: 2
+  isPlayerControlled: 0
