@@ -26,10 +26,7 @@ public class GridManager : MonoBehaviour
 
     public Dictionary<Vector2Int, UnitBase> unitPositions = new Dictionary<Vector2Int, UnitBase>();
 
-    void Awake()
-    {
-        Instance = this;
-    }
+    void Awake() => Instance = this;
 
     void Start()
     {
@@ -40,7 +37,6 @@ public class GridManager : MonoBehaviour
     void GenerateGrid()
     {
         tiles = new Tiles[width, height];
-
         float offsetX = (width - 1) * cellSize / 2f;
         float offsetY = (height - 1) * cellSize / 2f;
 
@@ -100,19 +96,28 @@ public class GridManager : MonoBehaviour
         return unitPositions.ContainsKey(new Vector2Int(x, y));
     }
 
-    public void MoveUnit(UnitBase unit, Tiles targetTile)
-    {
-        Vector2Int oldPos = new Vector2Int(unit.x, unit.y);
-        unit.MoveTo(targetTile);
-
-        unitPositions.Remove(oldPos);
-        unitPositions[new Vector2Int(targetTile.x, targetTile.y)] = unit;
-    }
-
     public UnitBase GetUnitAt(int x, int y)
     {
         unitPositions.TryGetValue(new Vector2Int(x, y), out UnitBase unit);
         return unit;
+    }
+
+    public void MoveUnit(UnitBase unit, Tiles targetTile)
+    {
+        if (unit == null || targetTile == null) return;
+
+        Vector2Int oldPos = new Vector2Int(unit.x, unit.y);
+
+        UnitBase targetUnit = GetUnitAt(targetTile.x, targetTile.y);
+        if (targetUnit != null && targetUnit.isPlayerControlled != unit.isPlayerControlled)
+        {
+            targetUnit.TakeDamage(targetUnit.health);
+        }
+
+        unit.MoveTo(targetTile);
+
+        unitPositions.Remove(oldPos);
+        unitPositions[new Vector2Int(targetTile.x, targetTile.y)] = unit;
     }
 
     public void OnTileClicked(Tiles tile)
@@ -123,9 +128,7 @@ public class GridManager : MonoBehaviour
         {
             UnitBase unit = GetUnitAt(tile.x, tile.y);
             if (unit != null && unit.isPlayerControlled)
-            {
                 SelectUnit(unit);
-            }
         }
         else
         {
@@ -167,9 +170,17 @@ public class GridManager : MonoBehaviour
             int ty = unit.y + d.y;
 
             Tiles t = GetTileAt(tx, ty);
-            if (t != null && t.isWalkable && !IsTileOccupied(tx, ty))
+            if (t == null || !t.isWalkable) continue;
+
+            UnitBase targetUnit = GetUnitAt(tx, ty);
+            if (targetUnit == null)
             {
                 t.Highlight(true);
+                highlightedTiles.Add(t);
+            }
+            else if (targetUnit.isPlayerControlled != unit.isPlayerControlled)
+            {
+                t.WarningHighlight(true);
                 highlightedTiles.Add(t);
             }
         }
@@ -178,7 +189,10 @@ public class GridManager : MonoBehaviour
     void ClearHighlights()
     {
         foreach (Tiles t in highlightedTiles)
+        {
             t.Highlight(false);
+            t.WarningHighlight(false);
+        }
         highlightedTiles.Clear();
     }
 }

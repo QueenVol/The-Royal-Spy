@@ -48,4 +48,10 @@ public class Tiles : MonoBehaviour
         if (sr != null)
             sr.color = enable ? Color.red : defaultColor;
     }
+
+    public void KillingHighlight(bool enable)
+    {
+        if (sr != null)
+            sr.color = enable ? Color.green : defaultColor;
+    }
 }

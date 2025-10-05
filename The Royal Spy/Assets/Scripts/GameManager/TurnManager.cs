@@ -46,11 +46,17 @@ public class TurnManager : MonoBehaviour
     {
         plannedTargets.Clear();
 
+        aiUnits.RemoveAll(ai => ai == null);
+
         foreach (AIUnit ai in aiUnits)
         {
+            if (ai == null) continue;
+
             ai.SetPlannedTargets(plannedTargets);
+
             bool finished = false;
             ai.Act(() => finished = true);
+
             yield return new WaitUntil(() => finished);
 
             var path = ai.GetPlannedPath();
@@ -62,8 +68,11 @@ public class TurnManager : MonoBehaviour
 
         foreach (var ai in aiUnits)
         {
-            ai.GeneratePlannedPath();
-            ai.ShowPredictedPath();
+            if (ai != null)
+            {
+                ai.GeneratePlannedPath();
+                ai.ShowPredictedPath();
+            }
         }
     }
 }

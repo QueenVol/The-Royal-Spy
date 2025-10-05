@@ -62,7 +62,15 @@ public class AIUnit : UnitBase
 
                 Tiles tile = GridManager.Instance.GetTileAt(newX, newY);
                 if (tile == null || !tile.isWalkable) break;
-                if (GridManager.Instance.IsTileOccupied(newX, newY)) break;
+                if (GridManager.Instance.IsTileOccupied(newX, newY))
+                {
+                    UnitBase target = GridManager.Instance.GetUnitAt(newX, newY);
+                    if (target != null && target.isPlayerControlled != this.isPlayerControlled)
+                    {
+                        moves.Add(new Vector2Int(newX, newY));
+                    }
+                    break;
+                }
                 if (otherPlannedTargets != null && otherPlannedTargets.Contains(new Vector2Int(newX, newY))) break;
 
                 moves.Add(new Vector2Int(newX, newY));
@@ -154,6 +162,8 @@ public class AIUnit : UnitBase
 
     public void ClearPredictedPath()
     {
+        if (plannedPath == null) return;
+
         foreach (var pos in plannedPath)
         {
             Tiles tile = GridManager.Instance.GetTileAt(pos.x, pos.y);
