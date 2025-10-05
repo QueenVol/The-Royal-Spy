@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5694069809420652411}
   - component: {fileID: 7430518843672829729}
-  - component: {fileID: 8714039813245986938}
+  - component: {fileID: 313809641559755564}
   m_Layer: 0
   m_Name: Rook
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8714039813245986938
+--- !u!114 &313809641559755564
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7293534724982419910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28a71e93c15e854b9f625ee4ba7c350, type: 3}
+  m_Script: {fileID: 11500000, guid: 476f1618bb246c24eb5e109f7295ad3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   x: 0

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AIUnit : UnitBase
@@ -17,34 +16,58 @@ public class AIUnit : UnitBase
     {
         yield return new WaitForSeconds(thinkDelay);
 
-        Vector2Int[] dirs = {
+        List<Vector2Int> possibleMoves = GetAllPossibleMoves();
+
+        if (possibleMoves.Count > 0)
+        {
+            Vector2Int target = possibleMoves[UnityEngine.Random.Range(0, possibleMoves.Count)];
+            Tiles tile = GridManager.Instance.GetTileAt(target.x, target.y);
+            if (tile != null)
+            {
+                GridManager.Instance.MoveUnit(this, tile);
+            }
+        }
+
+        onComplete?.Invoke();
+    }
+
+    protected virtual Vector2Int[] GetMoveDirections()
+    {
+        return new Vector2Int[]
+        {
             new Vector2Int(1,0), new Vector2Int(-1,0),
             new Vector2Int(0,1), new Vector2Int(0,-1),
             new Vector2Int(1,1), new Vector2Int(-1,1),
             new Vector2Int(1,-1), new Vector2Int(-1,-1)
         };
+    }
 
-        for (int i = 0; i < dirs.Length; i++)
-        {
-            int r = UnityEngine.Random.Range(i, dirs.Length);
-            Vector2Int temp = dirs[i];
-            dirs[i] = dirs[r];
-            dirs[r] = temp;
-        }
+    protected virtual bool CanSlideInDirection(Vector2Int dir) => false;
+
+    private List<Vector2Int> GetAllPossibleMoves()
+    {
+        List<Vector2Int> moves = new List<Vector2Int>();
+        Vector2Int[] dirs = GetMoveDirections();
 
         foreach (var dir in dirs)
         {
-            int newX = x + dir.x;
-            int newY = y + dir.y;
-
-            Tiles targetTile = GridManager.Instance.GetTileAt(newX, newY);
-            if (targetTile != null && targetTile.isWalkable && !GridManager.Instance.IsTileOccupied(newX, newY))
+            int step = 1;
+            while (true)
             {
-                GridManager.Instance.MoveUnit(this, targetTile);
-                break;
+                int newX = x + dir.x * step;
+                int newY = y + dir.y * step;
+
+                Tiles tile = GridManager.Instance.GetTileAt(newX, newY);
+                if (tile == null || !tile.isWalkable) break;
+                if (GridManager.Instance.IsTileOccupied(newX, newY)) break;
+
+                moves.Add(new Vector2Int(newX, newY));
+
+                if (!CanSlideInDirection(dir)) break;
+                step++;
             }
         }
 
-        onComplete?.Invoke();
+        return moves;
     }
 }

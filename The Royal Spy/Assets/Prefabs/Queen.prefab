@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8861385408943781229}
   - component: {fileID: 5015228562610034218}
-  - component: {fileID: 3607545034976210252}
+  - component: {fileID: -5124681056430697045}
   m_Layer: 0
   m_Name: Queen
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3607545034976210252
+--- !u!114 &-5124681056430697045
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6929085514790987568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28a71e93c15e854b9f625ee4ba7c350, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ffb1be574745d34ebfcb8f4691f5a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   x: 0

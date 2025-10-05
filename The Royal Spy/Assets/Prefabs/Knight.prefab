@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3900748345673270425}
   - component: {fileID: 3419526656033931891}
-  - component: {fileID: 954217545480011758}
+  - component: {fileID: 7722800157500375785}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &954217545480011758
+--- !u!114 &7722800157500375785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 158872546321169481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28a71e93c15e854b9f625ee4ba7c350, type: 3}
+  m_Script: {fileID: 11500000, guid: bc391211d9f81964a9647697adfab357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   x: 0
