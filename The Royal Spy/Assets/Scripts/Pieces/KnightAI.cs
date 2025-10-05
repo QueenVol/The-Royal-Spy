@@ -16,4 +16,14 @@ public class KnightAI : AIUnit
     }
 
     protected override bool CanSlideInDirection(Vector2Int dir) => false;
+
+    public override List<Vector2Int> GetPlannedPath()
+    {
+        var allMoves = base.GetAllPossibleMoves();
+        if (allMoves.Count == 0)
+            return new List<Vector2Int>();
+
+        var target = allMoves[UnityEngine.Random.Range(0, allMoves.Count)];
+        return new List<Vector2Int> { target };
+    }
 }

@@ -42,4 +42,10 @@ public class Tiles : MonoBehaviour
         if (sr != null)
             sr.color = enable ? highlightColor : defaultColor;
     }
+
+    public void WarningHighlight(bool enable)
+    {
+        if (sr != null)
+            sr.color = enable ? Color.red : defaultColor;
+    }
 }

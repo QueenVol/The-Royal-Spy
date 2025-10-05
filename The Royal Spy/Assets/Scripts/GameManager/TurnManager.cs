@@ -8,10 +8,23 @@ public class TurnManager : MonoBehaviour
     public bool IsPlayerTurn = true;
 
     private List<AIUnit> aiUnits = new List<AIUnit>();
+    private HashSet<Vector2Int> plannedTargets = new HashSet<Vector2Int>();
 
     void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        if (IsPlayerTurn)
+        {
+            foreach (var ai in aiUnits)
+            {
+                ai.GeneratePlannedPath();
+                ai.ShowPredictedPath();
+            }
+        }
     }
 
     public void RegisterAI(AIUnit ai)
@@ -22,19 +35,35 @@ public class TurnManager : MonoBehaviour
 
     public void EndPlayerTurn()
     {
+        foreach (var ai in aiUnits)
+            ai.ClearPredictedPath();
+
         IsPlayerTurn = false;
         StartCoroutine(AITurnCoroutine());
     }
 
     private IEnumerator AITurnCoroutine()
     {
+        plannedTargets.Clear();
+
         foreach (AIUnit ai in aiUnits)
         {
+            ai.SetPlannedTargets(plannedTargets);
             bool finished = false;
             ai.Act(() => finished = true);
             yield return new WaitUntil(() => finished);
+
+            var path = ai.GetPlannedPath();
+            if (path.Count > 0)
+                plannedTargets.Add(path[path.Count - 1]);
         }
 
         IsPlayerTurn = true;
+
+        foreach (var ai in aiUnits)
+        {
+            ai.GeneratePlannedPath();
+            ai.ShowPredictedPath();
+        }
     }
 }
