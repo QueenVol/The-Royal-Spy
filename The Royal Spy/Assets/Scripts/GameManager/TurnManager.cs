@@ -23,22 +23,18 @@ public class TurnManager : MonoBehaviour
     public void EndPlayerTurn()
     {
         IsPlayerTurn = false;
-        StartCoroutine(AITurn());
+        StartCoroutine(AITurnCoroutine());
     }
 
-    IEnumerator<WaitForSeconds> AITurn()
+    private IEnumerator AITurnCoroutine()
     {
         foreach (AIUnit ai in aiUnits)
         {
-            ai.Act();
-            yield return new WaitForSeconds(1f);
+            bool finished = false;
+            ai.Act(() => finished = true);
+            yield return new WaitUntil(() => finished);
         }
 
         IsPlayerTurn = true;
-    }
-
-    public void EndAITurn()
-    {
-
     }
 }

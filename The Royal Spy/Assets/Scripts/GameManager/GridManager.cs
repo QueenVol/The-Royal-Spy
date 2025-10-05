@@ -20,9 +20,11 @@ public class GridManager : MonoBehaviour
     public GameObject pawnPrefab;
     public GameObject spyPrefab;
 
-    private GameObject[,] tiles;
+    private Tiles[,] tiles;
     private UnitBase selectedUnit;
     private List<Tiles> highlightedTiles = new List<Tiles>();
+
+    public Dictionary<Vector2Int, UnitBase> unitPositions = new Dictionary<Vector2Int, UnitBase>();
 
     void Awake()
     {
@@ -37,7 +39,7 @@ public class GridManager : MonoBehaviour
 
     void GenerateGrid()
     {
-        tiles = new GameObject[width, height];
+        tiles = new Tiles[width, height];
 
         float offsetX = (width - 1) * cellSize / 2f;
         float offsetY = (height - 1) * cellSize / 2f;
@@ -47,10 +49,11 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Vector3 pos = new Vector3(x * cellSize - offsetX, y * cellSize - offsetY, 0);
-                GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
-                tile.name = $"Tile {x},{y}";
-                tile.GetComponent<Tiles>().Init(x, y);
-                tiles[x, y] = tile;
+                GameObject tileGO = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
+                tileGO.name = $"Tile {x},{y}";
+                Tiles t = tileGO.GetComponent<Tiles>();
+                t.Init(x, y);
+                tiles[x, y] = t;
             }
         }
     }
@@ -69,24 +72,47 @@ public class GridManager : MonoBehaviour
 
     void SpawnAI(GameObject prefab, int x, int y)
     {
-        GameObject go = Instantiate(prefab, tiles[x, y].transform.position, Quaternion.identity);
+        GameObject go = Instantiate(prefab, tiles[x, y].GetWorldPosition(), Quaternion.identity);
         AIUnit ai = go.GetComponent<AIUnit>();
         ai.Init(x, y);
+        ai.isPlayerControlled = false;
         TurnManager.Instance.RegisterAI(ai);
+        unitPositions[new Vector2Int(x, y)] = ai;
     }
 
     void SpawnPlayer(GameObject prefab, int x, int y)
     {
-        GameObject go = Instantiate(prefab, tiles[x, y].transform.position, Quaternion.identity);
+        GameObject go = Instantiate(prefab, tiles[x, y].GetWorldPosition(), Quaternion.identity);
         PlayerUnit player = go.GetComponent<PlayerUnit>();
-        player.isPlayerControlled = true;
         player.Init(x, y);
+        player.isPlayerControlled = true;
+        unitPositions[new Vector2Int(x, y)] = player;
     }
 
     public Tiles GetTileAt(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height) return null;
-        return tiles[x, y]?.GetComponent<Tiles>();
+        return tiles[x, y];
+    }
+
+    public bool IsTileOccupied(int x, int y)
+    {
+        return unitPositions.ContainsKey(new Vector2Int(x, y));
+    }
+
+    public void MoveUnit(UnitBase unit, Tiles targetTile)
+    {
+        Vector2Int oldPos = new Vector2Int(unit.x, unit.y);
+        unit.MoveTo(targetTile);
+
+        unitPositions.Remove(oldPos);
+        unitPositions[new Vector2Int(targetTile.x, targetTile.y)] = unit;
+    }
+
+    public UnitBase GetUnitAt(int x, int y)
+    {
+        unitPositions.TryGetValue(new Vector2Int(x, y), out UnitBase unit);
+        return unit;
     }
 
     public void OnTileClicked(Tiles tile)
@@ -105,7 +131,7 @@ public class GridManager : MonoBehaviour
         {
             if (highlightedTiles.Contains(tile))
             {
-                selectedUnit.MoveTo(tile);
+                MoveUnit(selectedUnit, tile);
                 ClearHighlights();
                 selectedUnit = null;
                 TurnManager.Instance.EndPlayerTurn();
@@ -128,8 +154,7 @@ public class GridManager : MonoBehaviour
     {
         ClearHighlights();
 
-        Vector2Int[] dirs = new Vector2Int[]
-        {
+        Vector2Int[] dirs = {
             new Vector2Int(1,0), new Vector2Int(-1,0),
             new Vector2Int(0,1), new Vector2Int(0,-1),
             new Vector2Int(1,1), new Vector2Int(-1,1),
@@ -142,7 +167,7 @@ public class GridManager : MonoBehaviour
             int ty = unit.y + d.y;
 
             Tiles t = GetTileAt(tx, ty);
-            if (t != null && t.isWalkable)
+            if (t != null && t.isWalkable && !IsTileOccupied(tx, ty))
             {
                 t.Highlight(true);
                 highlightedTiles.Add(t);
@@ -155,15 +180,5 @@ public class GridManager : MonoBehaviour
         foreach (Tiles t in highlightedTiles)
             t.Highlight(false);
         highlightedTiles.Clear();
-    }
-
-    UnitBase GetUnitAt(int x, int y)
-    {
-        foreach (UnitBase u in FindObjectsOfType<UnitBase>())
-        {
-            if (u.x == x && u.y == y)
-                return u;
-        }
-        return null;
     }
 }

@@ -44,6 +44,7 @@ public abstract class UnitBase : MonoBehaviour
 
     protected virtual void Die()
     {
+        GridManager.Instance.unitPositions.Remove(new Vector2Int(x, y));
         Destroy(gameObject);
     }
 }
