@@ -57,7 +57,6 @@ public class GridManager : MonoBehaviour
 
     void SpawnAllPieces()
     {
-        // AI
         SpawnAI(kingPrefab, 4, 7);
         SpawnAI(queenPrefab, 3, 7);
         SpawnAI(bishopPrefab, 2, 7);
@@ -65,7 +64,6 @@ public class GridManager : MonoBehaviour
         SpawnAI(rookPrefab, 0, 7);
         SpawnAI(pawnPrefab, 1, 6);
 
-        // Íæ¼Ò
         SpawnPlayer(spyPrefab, 0, 0);
     }
 
@@ -133,7 +131,9 @@ public class GridManager : MonoBehaviour
         Vector2Int[] dirs = new Vector2Int[]
         {
             new Vector2Int(1,0), new Vector2Int(-1,0),
-            new Vector2Int(0,1), new Vector2Int(0,-1)
+            new Vector2Int(0,1), new Vector2Int(0,-1),
+            new Vector2Int(1,1), new Vector2Int(-1,1),
+            new Vector2Int(1,-1), new Vector2Int(-1,-1)
         };
 
         foreach (Vector2Int d in dirs)

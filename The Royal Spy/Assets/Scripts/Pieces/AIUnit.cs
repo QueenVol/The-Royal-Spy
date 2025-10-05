@@ -15,7 +15,6 @@ public class AIUnit : UnitBase
     {
         yield return new WaitForSeconds(thinkDelay);
 
-        // 默认AI行为：随机移动一格
         Vector2Int[] dirs = new Vector2Int[]
         {
             new Vector2Int(1,0), new Vector2Int(-1,0),
