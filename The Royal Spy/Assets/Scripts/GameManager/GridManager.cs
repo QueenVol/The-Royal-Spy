@@ -56,12 +56,24 @@ public class GridManager : MonoBehaviour
 
     void SpawnAllPieces()
     {
-        SpawnAI(kingPrefab, 4, 7);
-        SpawnAI(queenPrefab, 3, 7);
-        SpawnAI(bishopPrefab, 2, 7);
-        SpawnAI(knightPrefab, 5, 7);
-        SpawnAI(rookPrefab, 0, 7);
-        SpawnAI(pawnPrefab, 1, 6);
+        SpawnAI(kingPrefab, 4, 9);
+        SpawnAI(queenPrefab, 5, 9);
+        SpawnAI(bishopPrefab, 4, 8);
+        SpawnAI(bishopPrefab, 3, 6);
+        SpawnAI(bishopPrefab, 6, 4);
+        SpawnAI(knightPrefab, 7, 9);
+        SpawnAI(knightPrefab, 2, 7);
+        SpawnAI(knightPrefab, 5, 5);
+        SpawnAI(knightPrefab, 4, 3);
+        SpawnAI(rookPrefab, 8, 8);
+        SpawnAI(rookPrefab, 1, 5);
+        SpawnAI(rookPrefab, 3, 1);
+        SpawnAI(pawnPrefab, 0, 7);
+        SpawnAI(pawnPrefab, 6, 7);
+        SpawnAI(pawnPrefab, 9, 6);
+        SpawnAI(pawnPrefab, 2, 4);
+        SpawnAI(pawnPrefab, 1, 2);
+        SpawnAI(pawnPrefab, 8, 2);
 
         SpawnPlayer(spyPrefab, 0, 0);
     }

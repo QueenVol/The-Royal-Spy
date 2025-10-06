@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cec3c0cf14a434479fb3fd629128118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 8
-  height: 8
+  width: 10
+  height: 10
   cellSize: 1
   tilePrefab: {fileID: 5755321811016611765, guid: b96291e0468c2384eb627764f081f2c1, type: 3}
   kingPrefab: {fileID: 3953703992830499407, guid: e0c87bb23691ca0489a595835361b8b3, type: 3}
@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlayerTurn: 1
+  playerDetected: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
