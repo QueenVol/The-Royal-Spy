@@ -23,6 +23,19 @@ public class AIUnit : UnitBase
 
         if (plannedPath.Count > 0)
         {
+            foreach (var pos in plannedPath)
+            {
+                UnitBase u = GridManager.Instance.GetUnitAt(pos.x, pos.y);
+                if (u != null && u.isPlayerControlled)
+                {
+                    u.TakeDamage(u.health);
+                    Tiles playerTile = GridManager.Instance.GetTileAt(pos.x, pos.y);
+                    GridManager.Instance.MoveUnit(this, playerTile);
+                    onComplete?.Invoke();
+                    yield break;
+                }
+            }
+
             Vector2Int target = plannedPath[plannedPath.Count - 1];
             Tiles tile = GridManager.Instance.GetTileAt(target.x, target.y);
             if (tile != null)
@@ -68,6 +81,9 @@ public class AIUnit : UnitBase
                     if (target != null && target.isPlayerControlled != this.isPlayerControlled)
                     {
                         moves.Add(new Vector2Int(newX, newY));
+
+                        if (target.isPlayerControlled)
+                            TurnManager.Instance.SetPlayerDetected();
                     }
                     break;
                 }
@@ -85,31 +101,22 @@ public class AIUnit : UnitBase
     public virtual List<Vector2Int> GetPlannedPath()
     {
         plannedPath.Clear();
+        Vector2Int playerPos = FindPlayer();
+
+        if (TurnManager.Instance.playerDetected && playerPos != Vector2Int.one * -999)
+        {
+            Vector2Int dir = GetMoveDirTowards(playerPos);
+            Vector2Int target = new Vector2Int(x + dir.x, y + dir.y);
+            plannedPath.Add(target);
+            return plannedPath;
+        }
 
         List<Vector2Int> allMoves = GetAllPossibleMoves();
         if (allMoves.Count == 0)
             return plannedPath;
 
-        Vector2Int target = allMoves[UnityEngine.Random.Range(0, allMoves.Count)];
-
-        if (CanSlideInDirection(GetMoveDirTowards(target)))
-        {
-            Vector2Int dir = GetMoveDirTowards(target);
-            Vector2Int current = new Vector2Int(x, y);
-
-            int safetyCounter = 0;
-            while (current != target && safetyCounter < 50)
-            {
-                current += dir;
-                plannedPath.Add(current);
-                safetyCounter++;
-            }
-        }
-        else
-        {
-            plannedPath.Add(target);
-        }
-
+        Vector2Int randomTarget = allMoves[UnityEngine.Random.Range(0, allMoves.Count)];
+        plannedPath.Add(randomTarget);
         return plannedPath;
     }
 
@@ -118,6 +125,16 @@ public class AIUnit : UnitBase
         int dx = Mathf.Clamp(target.x - x, -1, 1);
         int dy = Mathf.Clamp(target.y - y, -1, 1);
         return new Vector2Int(dx, dy);
+    }
+
+    private Vector2Int FindPlayer()
+    {
+        foreach (var kvp in GridManager.Instance.unitPositions)
+        {
+            if (kvp.Value.isPlayerControlled)
+                return kvp.Key;
+        }
+        return new Vector2Int(-999, -999);
     }
 
     public void GeneratePlannedPath()

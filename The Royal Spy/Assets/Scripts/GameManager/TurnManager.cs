@@ -10,6 +10,8 @@ public class TurnManager : MonoBehaviour
     private List<AIUnit> aiUnits = new List<AIUnit>();
     private HashSet<Vector2Int> plannedTargets = new HashSet<Vector2Int>();
 
+    public bool playerDetected = false;
+
     void Awake()
     {
         Instance = this;
@@ -40,6 +42,11 @@ public class TurnManager : MonoBehaviour
 
         IsPlayerTurn = false;
         StartCoroutine(AITurnCoroutine());
+    }
+
+    public void SetPlayerDetected()
+    {
+        playerDetected = true;
     }
 
     private IEnumerator AITurnCoroutine()
