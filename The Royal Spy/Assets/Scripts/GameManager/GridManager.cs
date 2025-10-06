@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour
 
     void SpawnAllPieces()
     {
-        SpawnAI(kingPrefab, 4, 9);
+        SpawnAI(kingPrefab, 4, 9, true);
         SpawnAI(queenPrefab, 5, 9);
         SpawnAI(bishopPrefab, 4, 8);
         SpawnAI(bishopPrefab, 3, 6);
@@ -78,13 +78,17 @@ public class GridManager : MonoBehaviour
         SpawnPlayer(spyPrefab, 0, 0);
     }
 
-    void SpawnAI(GameObject prefab, int x, int y)
+    void SpawnAI(GameObject prefab, int x, int y, bool isKing = false)
     {
         GameObject go = Instantiate(prefab, tiles[x, y].GetWorldPosition(), Quaternion.identity);
         AIUnit ai = go.GetComponent<AIUnit>();
         ai.Init(x, y);
         ai.isPlayerControlled = false;
-        TurnManager.Instance.RegisterAI(ai);
+        if (isKing)
+            TurnManager.Instance.RegisterKing(ai);
+        else
+            TurnManager.Instance.RegisterAI(ai);
+
         unitPositions[new Vector2Int(x, y)] = ai;
     }
 
@@ -94,6 +98,7 @@ public class GridManager : MonoBehaviour
         PlayerUnit player = go.GetComponent<PlayerUnit>();
         player.Init(x, y);
         player.isPlayerControlled = true;
+        TurnManager.Instance.RegisterPlayer(player);
         unitPositions[new Vector2Int(x, y)] = player;
     }
 

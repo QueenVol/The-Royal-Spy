@@ -45,6 +45,16 @@ public abstract class UnitBase : MonoBehaviour
     protected virtual void Die()
     {
         GridManager.Instance.unitPositions.Remove(new Vector2Int(x, y));
+
+        if (TurnManager.Instance != null)
+        {
+            if (TurnManager.Instance.kingUnit == this)
+                TurnManager.Instance.OnKingDeath();
+
+            if (TurnManager.Instance.playerUnit == this)
+                TurnManager.Instance.OnPlayerDeath();
+        }
+
         Destroy(gameObject);
     }
 }
